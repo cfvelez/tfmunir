@@ -21,12 +21,12 @@ def connect_database():
     return conn
 
 def getExport(country_code):
-    cursor.execute("SELECT SUM(export_value) FROM trading_location_export WHERE year >='1991' AND location_code ='"+country_code+"' GROUP BY year")
+    cursor.execute("SELECT SUM(export_value) FROM trading_location_export WHERE year >='1991' AND location_code ='"+country_code+"' GROUP BY year ORDER BY year ASC")
     rows = cursor.fetchall()
     return rows
 
 def getUnemployment(country_code):
-    cursor.execute("SELECT  value FROM unemployment WHERE year <='2016' AND location_code ='"+country_code+"'")
+    cursor.execute("SELECT  value FROM unemployment WHERE year <='2016' AND location_code ='"+country_code+"' ORDER BY year ASC")
     rows = cursor.fetchall()
     return rows
 
