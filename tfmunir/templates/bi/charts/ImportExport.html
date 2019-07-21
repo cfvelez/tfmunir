@@ -1,0 +1,116 @@
+<canvas id="lineChart" class="chartjs" height="120px"></canvas>
+<script>
+
+function drawLineChart(year, importaciones, exportaciones){
+    var canvas = document.getElementById("lineChart");
+    var ctx = canvas.getContext('2d');
+
+    var data = {
+    labels: year,
+    datasets: [{
+        label: "Exportaciones",
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "blue",
+        borderColor: "blue", // The main line color
+        borderCapStyle: 'square',
+        borderDash: [], // try [5, 15] for instance
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "black",
+        pointBackgroundColor: "white",
+        pointBorderWidth: 1,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: "yellow",
+        pointHoverBorderColor: "brown",
+        pointHoverBorderWidth: 2,
+        pointRadius: 4,
+        pointHitRadius: 10,
+        // notice the gap in the data and the spanGaps: true
+        data: exportaciones,
+        spanGaps: true,
+        }, {
+        label: "Importaciones",
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "red",
+        borderColor: "red", // The main line color
+        borderCapStyle: 'square',
+        borderDash: [], // try [5, 15] for instance
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "black",
+        pointBackgroundColor: "white",
+        pointBorderWidth: 1,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: "yellow",
+        pointHoverBorderColor: "brown",
+        pointHoverBorderWidth: 2,
+        pointRadius: 4,
+        pointHitRadius: 10,
+        // notice the gap in the data and the spanGaps: true
+        data: importaciones,
+        spanGaps: true,
+        }
+     ]
+    };
+
+    var options = {
+    tooltips: {
+                mode: 'label',
+                label: 'mylabel',
+                maintainAspectRatio: false,
+                callbacks: {
+                label: function(tooltipItem, data) {
+                   return '$ '+tooltipItem.yLabel.toLocaleString(); }, },
+        },
+    scales: {   
+            yAxes: [{
+                ticks: {
+                    beginAtZero:false,
+                    callback: function(value, index, values) {
+                        return '$'+value.toLocaleString();
+                    }
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'Valor en MM (usd)'
+                  }
+            }]            
+        }  
+    };
+
+     // Chart declaration:
+    
+    if (typeof window.myLineChart === 'undefined') {
+        window.myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+        });
+    }
+    else{
+        window.myLineChart.data = data;
+        window.myLineChart.update();
+    }
+    
+}
+
+function graphImportExport(data){
+    
+    year = [];
+    importaciones = [];
+    exportaciones = [];
+
+    data.forEach(function(row) {
+        year.push(row.year);
+        importaciones.push(Math.round(row.import_value__sum/1000000));
+        exportaciones.push(Math.round(row.export_value__sum/1000000));
+    });
+
+    drawLineChart(year, importaciones, exportaciones);
+    
+}
+   
+
+</script>

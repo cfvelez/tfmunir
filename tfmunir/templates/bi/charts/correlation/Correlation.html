@@ -1,0 +1,88 @@
+<canvas id="scatterChart" class="chartjs" height="120px"></canvas>
+<script>
+
+function drawScatterChart(datos, summary){
+    var canvas = document.getElementById("scatterChart");
+    var ctx = canvas.getContext('2d');
+
+    var color = Chart.helpers.color;
+	var scatterChartData = {
+		datasets: [{
+			borderColor: window.chartColors.red,
+			backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+			label: 'Exportaciones vs Tasa Desempleo',
+			data: datos
+		}]
+	};
+
+    var options = {
+				title: {
+					display: true,
+					text: summary,
+                    position: 'bottom'
+				},
+				scales: {
+					xAxes: [{
+                        ticks: {
+							userCallback: function(tick) {
+								return tick.toString() + ' %';
+							}
+                        },
+						scaleLabel: {
+							labelString: '% Tasa desempleo ',
+							display: true,
+						}
+					}],
+					yAxes: [{
+						ticks: {
+							callback: function(value, index, values) {
+								return '$'+value.toLocaleString();
+							}
+						},
+						scaleLabel: {
+							labelString: 'Valor en MM (usd)',
+							display: true
+						}
+					}]
+				}
+			};
+
+     // Chart declaration:
+    
+    if (typeof window.myScatterhart === 'undefined') {
+        window.myScatterChart = Chart.Scatter(ctx, {
+		data: scatterChartData,
+        options: options
+        });
+    }
+    else{
+        window.myScatterChart.data = data;
+        window.myScatterChart.update();
+    }
+    
+}
+
+function graphCorrelation(data){
+    
+    datos = [];
+    puntos = JSON.parse(data.points);
+
+    year = 1991;
+    for (i = 0; i < puntos.length; i++) { 
+
+        year = year + 1;
+        var punto = puntos[i];
+        
+        datos.push({
+					x: punto.x ,
+					y: Math.round(punto.y /1000000),
+                    year: year
+				});
+    }   
+    var summary = "Test de correlación: " + data.corr.toFixed(2);
+    drawScatterChart(datos, summary);
+    
+}
+   
+
+</script>

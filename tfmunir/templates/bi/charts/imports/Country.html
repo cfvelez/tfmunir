@@ -1,0 +1,83 @@
+<canvas id="barCountryImpChart" class="chartjs" height="120px"></canvas>
+<script>
+
+function drawBarChartImpCountry(country, importaciones, bgc){
+    var canvas = document.getElementById("barCountryImpChart");
+    var ctx = canvas.getContext('2d');
+
+    var data = {
+    labels: country,
+    datasets: [{
+        label: "Top 20 de los paises desde donde se importó.",
+        data: importaciones,
+        backgroundColor: bgc,
+        }
+     ]
+    };
+
+    var options = {
+
+        tooltips: {
+                mode: 'label',
+                label: 'mylabel',
+                callbacks: {
+                label: function(tooltipItem, data) {
+                   return '$'+tooltipItem.yLabel.toLocaleString(); }, },
+        },
+        scales: {   
+            xAxes: [{
+                barThickness: 10,
+                maxBarThickness: 10,
+                minBarLength: 2,
+                gridLines: {
+                    offsetGridLines: true
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '$'+value.toLocaleString();
+                    }
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'Valor en MM (usd)'
+                  }
+            }]            
+        }  
+    };
+
+     // Chart declaration:
+    
+    if (typeof window.myBarChartImpCountry === 'undefined') {
+
+        window.myBarChartImpCountry = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+
+    });
+    }
+    else{
+        window.myBarChartImpCountry.data = data;
+        window.myBarChartImpCountry.update();
+    }
+    
+}
+
+function graphImpCountry(data){
+    
+    locations = [];
+    importaciones = [];
+    backgroudcolors = ['black','gray','brown','yellow','pink','green','purple','blue','orange','red','black','gray','brown','yellow','pink','green','purple','blue','orange','red'];
+    
+    data.forEach(function(row) {
+        locations.push(row[0]);
+        importaciones.push(Math.round(row[1]/1000000));
+    });
+    
+    drawBarChartImpCountry(locations,importaciones,backgroudcolors);
+    
+}
+
+</script>

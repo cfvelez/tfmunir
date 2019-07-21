@@ -1,0 +1,83 @@
+<canvas id="barCountryExpChart" class="chartjs" height="120px"></canvas>
+<script>
+
+function drawBarChartExpCountry(country, exportaciones, bgc){
+    var canvas = document.getElementById("barCountryExpChart");
+    var ctx = canvas.getContext('2d');
+
+    var data = {
+    labels: country,
+    datasets: [{
+        label: "Top 20 de los paises que mas se exportó.",
+        data: exportaciones,
+        backgroundColor: bgc,
+        }
+     ]
+    };
+
+    var options = {
+
+        tooltips: {
+                mode: 'label',
+                label: 'mylabel',
+                callbacks: {
+                label: function(tooltipItem, data) {
+                   return '$'+tooltipItem.yLabel.toLocaleString(); }, },
+        },
+        scales: {   
+            xAxes: [{
+                barThickness: 10,
+                maxBarThickness: 10,
+                minBarLength: 2,
+                gridLines: {
+                    offsetGridLines: true
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '$'+value.toLocaleString();
+                    }
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'Valor en MM (usd)'
+                  }
+            }]            
+        }  
+    };
+
+     // Chart declaration:
+    
+    if (typeof window.myBarChartExpCountry === 'undefined') {
+
+        window.myBarChartExpCountry = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+
+    });
+    }
+    else{
+        window.myBarChartExpCountry.data = data;
+        window.myBarChartExpCountry.update();
+    }
+    
+}
+
+function graphExpCountry(data){
+    
+    locations = [];
+    exportaciones = [];
+    backgroudcolors = ['red','blue','orange','purple','green','pink','yellow','brown','gray','black','red','blue','orange','purple','green','pink','yellow','brown','gray','black'];
+    
+    data.forEach(function(row) {
+        locations.push(row[0]);
+        exportaciones.push(Math.round(row[1]/1000000));
+    });
+    
+    drawBarChartExpCountry(locations,exportaciones,backgroudcolors);
+    
+}
+
+</script>

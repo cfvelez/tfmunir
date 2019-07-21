@@ -1,0 +1,82 @@
+<canvas id="barProductExpChart" class="chartjs" height="240px"></canvas>
+<script>
+
+function drawBarChartExpProduct(products, exportaciones, bgc){
+    var canvas = document.getElementById("barProductExpChart");
+    var ctx = canvas.getContext('2d');
+
+    var data = {
+    labels: products,
+    datasets: [{
+        label: "Top 20 de los productos que mas se exportarón.",
+        data: exportaciones,
+        backgroundColor: bgc,
+        }
+     ]
+    };
+
+    var options = {
+
+        tooltips: {
+                mode: 'label',
+                label: 'mylabel',
+                callbacks: {
+                label: function(tooltipItem, data) {
+                   return '$'+tooltipItem.xLabel.toLocaleString(); }, },
+        },
+        scales: {   
+            xAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '$'+value.toLocaleString();
+                    }
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'Valor en MM (usd)'
+                    }
+                }],
+            yAxes: [{
+                        barThickness: 10,
+                        maxBarThickness: 10,
+                gridLines: {
+                    offsetGridLines: true
+                }
+            }]            
+        }  
+    };
+
+     // Chart declaration:
+    
+    if (typeof window.myBarChartExpProduct === 'undefined') {
+
+        window.myBarChartExpProduct = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: data,
+        options: options
+
+    });
+    }
+    else{
+        window.myBarChartExpProduct.data = data;
+        window.myBarChartExpProduct.update();
+    }
+    
+}
+
+function graphExpProduct(data){
+    
+    products = [];
+    exportaciones = [];
+    backgroudcolors = ['red','blue','orange','purple','green','pink','yellow','brown','gray','black','red','blue','orange','purple','green','pink','yellow','brown','gray','black'];
+    
+    data.forEach(function(row) {
+        products.push(row[0]);
+        exportaciones.push(Math.round(row[1]/1000000));
+    });
+    
+    drawBarChartExpProduct(products,exportaciones,backgroudcolors);
+    
+}
+
+</script>

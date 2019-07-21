@@ -1,0 +1,82 @@
+<canvas id="barProductImpChart" class="chartjs" height="240px"></canvas>
+<script>
+
+function drawBarChartImpProduct(products, importaciones, bgc){
+    var canvas = document.getElementById("barProductImpChart");
+    var ctx = canvas.getContext('2d');
+
+    var data = {
+    labels: products,
+    datasets: [{
+        label: "Top 20 de los productos que mas se importáron.",
+        data: importaciones,
+        backgroundColor: bgc,
+        }
+     ]
+    };
+
+    var options = {
+
+        tooltips: {
+                mode: 'label',
+                label: 'mylabel',
+                callbacks: {
+                label: function(tooltipItem, data) {
+                   return '$'+tooltipItem.xLabel.toLocaleString(); }, },
+        },
+        scales: {   
+            xAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '$ '+value.toLocaleString();
+                    }
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'Valor en MM (usd)'
+                    }
+                }],
+            yAxes: [{
+                        barThickness: 10,
+                        maxBarThickness: 10,
+                gridLines: {
+                    offsetGridLines: true
+                }
+            }]            
+        }  
+    };
+
+     // Chart declaration:
+    
+    if (typeof window.myBarChartImpProduct === 'undefined') {
+
+        window.myBarChartImpProduct = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: data,
+        options: options
+
+    });
+    }
+    else{
+        window.myBarChartImpProduct.data = data;
+        window.myBarChartImpProduct.update();
+    }
+    
+}
+
+function graphImpProduct(data){
+    
+    products = [];
+    importaciones = [];
+    backgroudcolors = ['black','gray','brown','yellow','pink','green','purple','blue','orange','red','black','gray','brown','yellow','pink','green','purple','blue','orange','red'];
+    
+    data.forEach(function(row) {
+        products.push(row[0]);
+        importaciones.push(Math.round(row[1]/1000000));
+    });
+    
+    drawBarChartImpProduct(products,importaciones,backgroudcolors);
+    
+}
+
+</script>
